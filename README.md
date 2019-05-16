@@ -19,3 +19,13 @@
 -Bild Hinzufügen
 -Datenbank speicher
 ```
+
+
+
+technik:
+
+//html to pdf
+https://stackoverflow.com/questions/18191893/generate-pdf-from-html-in-div-using-javascript
+
+
+FRAMEWORK?????
