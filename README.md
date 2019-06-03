@@ -29,3 +29,10 @@ https://stackoverflow.com/questions/18191893/generate-pdf-from-html-in-div-using
 
 
 FRAMEWORK?????
+
+
+
+
+
+Frontend möglichkeit Adobe XD mit verbindung von Avocode - https://www.youtube.com/watch?v=_-7_3RvoBq8
+Avocode verwandelt das Adobe XD Projekt in den benötigten HTML,JS,CSS code
