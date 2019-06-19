@@ -18,6 +18,7 @@
 -CV Format wählen aus beispielen
 -Bild Hinzufügen
 -Datenbank speicher
+-Chrome Browser Datenbank
 ```
 
 
