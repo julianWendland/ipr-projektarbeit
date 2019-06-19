@@ -31,8 +31,8 @@ https://stackoverflow.com/questions/18191893/generate-pdf-from-html-in-div-using
 
 FRAMEWORK?????
 
-
-
+react-dragndrop-lib
+https://github.com/atlassian/react-beautiful-dnd
 
 
 Frontend möglichkeit Adobe XD mit verbindung von Avocode - https://www.youtube.com/watch?v=_-7_3RvoBq8
