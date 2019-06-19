@@ -14,7 +14,7 @@
 ## CV Formater 
 ```
 -Async eingabe mit direktem anzeigen auf der Beispiel seite
--PDF Format ausgabe
+-PDF Format ausgabe -- Browser drucken funktion
 -CV Format wählen aus beispielen
 -Bild Hinzufügen
 -Datenbank speicher
