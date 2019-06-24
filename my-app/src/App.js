@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
-import ReactDOM from 'react-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-// fake data generator
+// Generate "Items"
 const getItems = (count, offset = 0) =>
   Array.from({ length: count }, (v, k) => k).map(k => ({
     id: `item-${k + offset}`,
     content: `item ${k + offset}`
   }));
 
-// a little function to help us with reordering the result
+//?????????????????
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -19,9 +18,9 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-/**
- * Moves an item from one list to another list.
- */
+
+ // Moves an item from one side to the opposite one
+ 
 const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
@@ -39,18 +38,18 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
+  // How an Item Looks like
   userSelect: 'none',
   padding: grid * 2,
   margin: `0 0 ${grid}px 0`,
 
-  // change background colour if dragging
+  // change background color if an item got dragged
   background: isDragging ? 'lightgreen' : 'grey',
-
-  // styles we need to apply on draggables
+  
+  // ????? styles we need to apply on draggables ????
   ...draggableStyle
 });
-
+// How the List looks like
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? 'lightblue' : 'lightgrey',
   padding: grid,
@@ -64,6 +63,7 @@ class App extends Component {
   };
 
   /**
+   * ??????????????
    * A semi-generic way to handle multiple lists. Matches
    * the IDs of the droppable container to the names of the
    * source arrays stored in the state.
@@ -78,7 +78,7 @@ class App extends Component {
   onDragEnd = result => {
     const { source, destination } = result;
 
-    // dropped outside the list
+    // brings an item back to Source if its dropped somewhere wrong
     if (!destination) {
       return;
     }
@@ -112,8 +112,7 @@ class App extends Component {
     }
   };
 
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
+  // Render the Whole App
   render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
