@@ -1,12 +1,29 @@
-import React, { Component } from 'react';
-import './App.css';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import React, { Component } from "react";
+import "./App.css";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
+const itemCount = 5;
 // Generate "Items"
-const getItems = (count, offset = 0) =>
-  Array.from({ length: count }, (v, k) => k).map(k => ({
+const getItems = (count, offset = 1) =>
+  Array.from({ length: count - itemCount }, (v, k) => k).map(k => ({
     id: `item-${k + offset}`,
-    content: `item ${k + offset}`
+    content: (
+      <form>
+        <div class="form-group row">
+          <label for="inputPassword" class="col-sm-2 col-form-label">
+            --
+          </label>
+          <div class="col-sm-10">
+            <input
+              type="text"
+              class="form-control"
+              id="inputPassword"
+              placeholder="Password"
+            />
+          </div>
+        </div>
+      </form>
+    )
   }));
 
 //?????????????????
@@ -18,9 +35,8 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
+// Moves an item from one side to the opposite one
 
- // Moves an item from one side to the opposite one
- 
 const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
@@ -35,25 +51,25 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result;
 };
 
-const grid = 8;
+const grid = 16;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   // How an Item Looks like
-  userSelect: 'none',
-  padding: grid * 2,
+  userSelect: "none",
+  padding: grid * 3,
   margin: `0 0 ${grid}px 0`,
 
   // change background color if an item got dragged
-  background: isDragging ? 'lightgreen' : 'grey',
-  
+  background: isDragging ? "lightblue" : "grey",
+
   // ????? styles we need to apply on draggables ????
   ...draggableStyle
 });
 // How the List looks like
 const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
+  background: isDraggingOver ? "lightgreen" : "lightgrey",
   padding: grid,
-  width: 250
+  width: 400
 });
 
 class App extends Component {
@@ -69,8 +85,8 @@ class App extends Component {
    * source arrays stored in the state.
    */
   id2List = {
-    droppable: 'items',
-    droppable2: 'selected'
+    droppable: "items",
+    droppable2: "selected"
   };
 
   getList = id => this.state[this.id2List[id]];
@@ -92,7 +108,7 @@ class App extends Component {
 
       let state = { items };
 
-      if (source.droppableId === 'droppable2') {
+      if (source.droppableId === "droppable2") {
         state = { selected: items };
       }
 
@@ -113,6 +129,8 @@ class App extends Component {
   };
 
   // Render the Whole App
+  //Verschiedene veränderliche objekte die gerendert werden
+  // und nicht immer eine Kopie von dem selben nir eine Zeichen for-Schleife
   render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -120,12 +138,10 @@ class App extends Component {
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}>
+              style={getListStyle(snapshot.isDraggingOver)}
+            >
               {this.state.items.map((item, index) => (
-                <Draggable
-                  key={item.id}
-                  draggableId={item.id}
-                  index={index}>
+                <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -134,7 +150,8 @@ class App extends Component {
                       style={getItemStyle(
                         snapshot.isDragging,
                         provided.draggableProps.style
-                      )}>
+                      )}
+                    >
                       {item.content}
                     </div>
                   )}
@@ -148,12 +165,10 @@ class App extends Component {
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}>
+              style={getListStyle(snapshot.isDraggingOver)}
+            >
               {this.state.selected.map((item, index) => (
-                <Draggable
-                  key={item.id}
-                  draggableId={item.id}
-                  index={index}>
+                <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -162,7 +177,8 @@ class App extends Component {
                       style={getItemStyle(
                         snapshot.isDragging,
                         provided.draggableProps.style
-                      )}>
+                      )}
+                    >
                       {item.content}
                     </div>
                   )}
