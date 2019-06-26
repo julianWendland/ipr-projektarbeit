@@ -7,18 +7,26 @@ import { Dexie } from "dexie";
 // Manipulate and Query Database
 //
 
-const itemCount = 5;
 // Generate "Items"
-const getItems = (count, offset = 1) =>
-  Array.from({ length: count - itemCount }, (v, k) => k).map(k => ({
-    id: `item-${k + offset}`,
-    content: <Text />
-  }));
 
-const itemTextarea = (count, offset = 1) =>
-  Array.from({ length: count - itemCount }, (v, k) => k).map(k => ({
-    id: `itemTextarea-${k + offset}`,
-    content: <Text />
+const content = count => {
+  if (count === 0) {
+    return <Text value="text" />;
+  } else if (count === 1) {
+    return <Foto value="foto" />;
+  } else if (count === 2) {
+    return <Anschrift value="anschrift" />;
+  } else if (count === 3) {
+    return <Hobbies value="hobby" />;
+  } else if (count === 4) {
+    return <Werdegang value="werdegang" />;
+  }
+};
+
+const getItems = (count, offset = 1) =>
+  Array.from({ length: count }, (v, k) => k).map(k => ({
+    id: `item-${k + offset}`,
+    content: content(k)
   }));
 
 const db = new Dexie("MyDb1");
@@ -27,8 +35,11 @@ db.version(1).stores({
   input: "key,txtInput"
 });
 db.input.clear();
-db.input.add({ key: "component1", txtInput: "" });
-
+db.input.add({ key: "text", txtInput: "" });
+db.input.add({ key: "foto", txtInput: "" });
+db.input.add({ key: "werdegang", txtInput: "" });
+db.input.add({ key: "anschrift", txtInput: "" });
+db.input.add({ key: "hobby", txtInput: "" });
 const msg = getItems.state;
 console.log(msg);
 //?????????????????
@@ -96,7 +107,7 @@ class Text extends Component {
     this.setState({ data: event.target.value });
     if (event.key === "Enter") {
       db.input
-        .update("component1", { txtInput: txtInput })
+        .update("text", { txtInput: txtInput })
 
         .catch(function(e) {});
       console.log(this);
@@ -107,18 +118,178 @@ class Text extends Component {
   render() {
     return (
       <form>
-        <label>{this.state.data}</label>
+        <label>Text</label>
         <div class="form-group">
           <textarea
             type="text"
             name="inputtextarea"
-            placeholder="Input"
+            placeholder="Text"
             class="form-control"
             id="inputtextarea"
             rows="3"
             onKeyUp={this.handle.bind(this)}
           />
-          <input class="btn btn-primary" type="submit" />
+        </div>
+      </form>
+    );
+  }
+}
+class Foto extends Component {
+  constructor() {
+    super();
+    this.state = {
+      data: ""
+    };
+  }
+  handle(event) {
+    let txtInput = this.state.data;
+
+    console.log(event.key);
+    this.setState({ data: event.target.value });
+    if (event.key === "Enter") {
+      db.input
+        .update("foto", { txtInput: txtInput })
+
+        .catch(function(e) {});
+      console.log(this);
+      event.preventDefault();
+    }
+  }
+
+  render() {
+    return (
+      <form>
+        <label>Foto</label>
+        <div class="form-group">
+          <textarea
+            type="text"
+            name="inputtextarea"
+            placeholder="Foto"
+            class="form-control"
+            id="inputtextarea"
+            rows="3"
+            onKeyUp={this.handle.bind(this)}
+          />
+        </div>
+      </form>
+    );
+  }
+}
+class Anschrift extends Component {
+  constructor() {
+    super();
+    this.state = {
+      data: ""
+    };
+  }
+  handle(event) {
+    let txtInput = this.state.data;
+
+    console.log(event.key);
+    this.setState({ data: event.target.value });
+    if (event.key === "Enter") {
+      db.input
+        .update("anschrift", { txtInput: txtInput })
+
+        .catch(function(e) {});
+      console.log(this);
+      event.preventDefault();
+    }
+  }
+
+  render() {
+    return (
+      <form>
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">Anschrift</label>
+          <textarea
+            class="form-control"
+            id="exampleFormControlTextarea1"
+            rows="3"
+            onKeyUp={this.handle.bind(this)}
+          />
+        </div>
+      </form>
+    );
+  }
+}
+class Werdegang extends Component {
+  constructor() {
+    super();
+    this.state = {
+      data: ""
+    };
+  }
+  handle(event) {
+    let txtInput = this.state.data;
+
+    console.log(event.key);
+    this.setState({ data: event.target.value });
+    if (event.key === "Enter") {
+      db.input
+        .update("werdegang", { txtInput: txtInput })
+
+        .catch(function(e) {});
+      console.log(this);
+      event.preventDefault();
+    }
+  }
+
+  render() {
+    return (
+      <form>
+        <label>Werdegang</label>
+        <div class="form-group">
+          <textarea
+            type="text"
+            name="inputtextarea"
+            placeholder="Werdegang"
+            class="form-control"
+            id="inputtextarea"
+            rows="3"
+            onKeyUp={this.handle.bind(this)}
+          />
+        </div>
+      </form>
+    );
+  }
+}
+class Hobbies extends Component {
+  constructor() {
+    super();
+    this.state = {
+      data: ""
+    };
+  }
+  handle(event) {
+    let txtInput = this.state.data;
+
+    console.log(event.key);
+    this.setState({ data: event.target.value });
+    if (event.key === "Enter") {
+      db.input
+        .update("hobby", { txtInput: txtInput })
+
+        .catch(function(e) {});
+      console.log(this);
+      event.preventDefault();
+    }
+  }
+
+  render() {
+    return (
+      <form>
+        <label>Hoobies</label>
+        <div class="form-group">
+          <textarea
+            type="text"
+            name="inputtextarea"
+            placeholder="Hobbies"
+            class="form-control"
+            id="inputtextarea"
+            rows="3"
+            onKeyUp={this.handle.bind(this)}
+          />
         </div>
       </form>
     );
@@ -127,8 +298,8 @@ class Text extends Component {
 
 class App extends Component {
   state = {
-    items: getItems(10),
-    selected: getItems(5, 10)
+    items: getItems(5),
+    selected: getItems(0, 5)
   };
 
   /**
