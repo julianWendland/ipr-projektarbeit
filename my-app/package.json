@@ -4,10 +4,13 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "dexie": "2.0.4",
     "node": "^12.4.0",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^11.0.4",
+    "react-detect-offline": "latest",
     "react-dom": "^16.8.6",
+    "react-indexed-db": "0.0.2",
     "react-scripts": "3.0.1"
   },
   "scripts": {

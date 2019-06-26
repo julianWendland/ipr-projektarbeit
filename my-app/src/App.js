@@ -1,31 +1,36 @@
 import React, { Component } from "react";
 import "./App.css";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Dexie } from "dexie";
+
+//
+// Manipulate and Query Database
+//
 
 const itemCount = 5;
 // Generate "Items"
 const getItems = (count, offset = 1) =>
   Array.from({ length: count - itemCount }, (v, k) => k).map(k => ({
     id: `item-${k + offset}`,
-    content: (
-      <form>
-        <div class="form-group row">
-          <label for="inputPassword" class="col-sm-2 col-form-label">
-            --
-          </label>
-          <div class="col-sm-10">
-            <input
-              type="text"
-              class="form-control"
-              id="inputPassword"
-              placeholder="Password"
-            />
-          </div>
-        </div>
-      </form>
-    )
+    content: <Text />
   }));
 
+const itemTextarea = (count, offset = 1) =>
+  Array.from({ length: count - itemCount }, (v, k) => k).map(k => ({
+    id: `itemTextarea-${k + offset}`,
+    content: <Text />
+  }));
+
+const db = new Dexie("MyDb1");
+
+db.version(1).stores({
+  input: "key,txtInput"
+});
+db.input.clear();
+db.input.add({ key: "component1", txtInput: "" });
+
+const msg = getItems.state;
+console.log(msg);
 //?????????????????
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -51,7 +56,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result;
 };
 
-const grid = 16;
+const grid = 4;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   // How an Item Looks like
@@ -66,11 +71,59 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle
 });
 // How the List looks like
-const getListStyle = isDraggingOver => ({
+const getListStyle1 = isDraggingOver => ({
   background: isDraggingOver ? "lightgreen" : "lightgrey",
   padding: grid,
-  width: 400
+  width: 600
 });
+
+const getListStyle2 = isDraggingOver => ({
+  background: isDraggingOver ? "lightgreen" : "lightgrey",
+  padding: grid,
+  width: 800
+});
+class Text extends Component {
+  constructor() {
+    super();
+    this.state = {
+      data: ""
+    };
+  }
+  handle(event) {
+    let txtInput = this.state.data;
+
+    console.log(event.key);
+    this.setState({ data: event.target.value });
+    if (event.key === "Enter") {
+      db.input
+        .update("component1", { txtInput: txtInput })
+
+        .catch(function(e) {});
+      console.log(this);
+      event.preventDefault();
+    }
+  }
+
+  render() {
+    return (
+      <form>
+        <label>{this.state.data}</label>
+        <div class="form-group">
+          <textarea
+            type="text"
+            name="inputtextarea"
+            placeholder="Input"
+            class="form-control"
+            id="inputtextarea"
+            rows="3"
+            onKeyUp={this.handle.bind(this)}
+          />
+          <input class="btn btn-primary" type="submit" />
+        </div>
+      </form>
+    );
+  }
+}
 
 class App extends Component {
   state = {
@@ -132,13 +185,15 @@ class App extends Component {
   //Verschiedene veränderliche objekte die gerendert werden
   // und nicht immer eine Kopie von dem selben nir eine Zeichen for-Schleife
   render() {
+    console.log(this);
+
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
+              style={getListStyle1(snapshot.isDraggingOver)}
             >
               {this.state.items.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -165,7 +220,7 @@ class App extends Component {
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
+              style={getListStyle2(snapshot.isDraggingOver)}
             >
               {this.state.selected.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
