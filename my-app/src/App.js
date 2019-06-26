@@ -51,6 +51,23 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
+const dbValue = result => {
+  const res = console.log(result["txtInput"]);
+};
+let res;
+
+const getDBvalue = key => {
+  const abc = Promise.resolve(db.input.get(key)).then(function(result) {
+    res = result["txtInput"];
+    console.log(res);
+  });
+
+  console.log(res);
+};
+
+console.log("-----------");
+console.log(getDBvalue("hobby"));
+
 // Moves an item from one side to the opposite one
 
 const move = (source, destination, droppableSource, droppableDestination) => {
@@ -84,14 +101,12 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 // How the List looks like
 const getListStyle1 = isDraggingOver => ({
   background: isDraggingOver ? "lightgreen" : "lightgrey",
-  padding: grid,
-  width: 600
+  padding: grid
 });
 
 const getListStyle2 = isDraggingOver => ({
   background: isDraggingOver ? "lightgreen" : "lightgrey",
-  padding: grid,
-  width: 800
+  padding: grid
 });
 class Text extends Component {
   constructor() {
@@ -118,12 +133,12 @@ class Text extends Component {
   render() {
     return (
       <form>
-        <label>Text</label>
+        <label class="font">Name</label>
         <div class="form-group">
           <textarea
             type="text"
             name="inputtextarea"
-            placeholder="Text"
+            placeholder="Vor-/Nachname, Geburtsdatum, Geburts-Ort"
             class="form-control"
             id="inputtextarea"
             rows="3"
@@ -159,17 +174,15 @@ class Foto extends Component {
   render() {
     return (
       <form>
-        <label>Foto</label>
-        <div class="form-group">
-          <textarea
-            type="text"
-            name="inputtextarea"
-            placeholder="Foto"
-            class="form-control"
-            id="inputtextarea"
-            rows="3"
-            onKeyUp={this.handle.bind(this)}
-          />
+        <label class="font">Foto</label>
+        <div class="form-group right">
+          <picture>
+            <source
+              srcset="https://storyhub.de/serve/profileimage?user=TylorAlid"
+              type="image/svg+xml"
+            />
+            <img src="..." class="img-fluid img-thumbnail" alt="..." />
+          </picture>
         </div>
       </form>
     );
@@ -201,8 +214,9 @@ class Anschrift extends Component {
     return (
       <form>
         <div class="form-group">
-          <label for="exampleFormControlTextarea1">Anschrift</label>
+          <label class="font">Anschrift</label>
           <textarea
+            placeholder="Adresse, PLZ, Ort"
             class="form-control"
             id="exampleFormControlTextarea1"
             rows="3"
@@ -238,12 +252,12 @@ class Werdegang extends Component {
   render() {
     return (
       <form>
-        <label>Werdegang</label>
+        <label class="font">Werdegang</label>
         <div class="form-group">
           <textarea
             type="text"
             name="inputtextarea"
-            placeholder="Werdegang"
+            placeholder="Schulen, Ausbildung, Abschlüsse, Praktika"
             class="form-control"
             id="inputtextarea"
             rows="3"
@@ -264,7 +278,6 @@ class Hobbies extends Component {
   handle(event) {
     let txtInput = this.state.data;
 
-    console.log(event.key);
     this.setState({ data: event.target.value });
     if (event.key === "Enter") {
       db.input
@@ -279,7 +292,7 @@ class Hobbies extends Component {
   render() {
     return (
       <form>
-        <label>Hoobies</label>
+        <label class="font">Hoobies</label>
         <div class="form-group">
           <textarea
             type="text"
@@ -289,7 +302,9 @@ class Hobbies extends Component {
             id="inputtextarea"
             rows="3"
             onKeyUp={this.handle.bind(this)}
-          />
+          >
+            {getDBvalue("hobby")}
+          </textarea>
         </div>
       </form>
     );
@@ -359,62 +374,83 @@ class App extends Component {
     console.log(this);
 
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              style={getListStyle1(snapshot.isDraggingOver)}
-            >
-              {this.state.items.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}
-                    >
-                      {item.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
+      <div class="container-fluid">
+        <nav class="navbar navbar-light stylecolor font border border rounded">
+          CV-Builder
+        </nav>
+        <div class="row">
+          <DragDropContext onDragEnd={this.onDragEnd}>
+            <div class="col">
+              <Droppable droppableId="droppable">
+                {(provided, snapshot) => (
+                  <div
+                    class="shadow-lg p-3 mb-5 bg-lightgrey rounded border border-dark"
+                    ref={provided.innerRef}
+                    style={getListStyle1(snapshot.isDraggingOver)}
+                  >
+                    {this.state.items.map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {item.content}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
             </div>
-          )}
-        </Droppable>
-        <Droppable droppableId="droppable2">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              style={getListStyle2(snapshot.isDraggingOver)}
-            >
-              {this.state.selected.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}
-                    >
-                      {item.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
+            <div class="col">
+              <Droppable droppableId="droppable2">
+                {(provided, snapshot) => (
+                  <div
+                    class="shadow-lg p-3 mb-5 bg-lightgrey rounded border border-dark"
+                    ref={provided.innerRef}
+                    style={getListStyle2(snapshot.isDraggingOver)}
+                  >
+                    {this.state.selected.map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {item.content}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
             </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+          </DragDropContext>
+        </div>
+      </div>
     );
   }
 }
